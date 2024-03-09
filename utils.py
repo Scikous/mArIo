@@ -21,17 +21,15 @@ class ReplayMem:
         if batch_size > len(self.replay_memory):
             return None
         experiences = random.sample(self.replay_memory, batch_size) 
-        states, actions, rewards, next_states, dones = zip(*experiences)  # Unpack experience tuples
+        prev_states, actions, rewards, next_states, dones = zip(*experiences)  # Unpack experience tuples
 
         # Convert all elements to tensors using list comprehension, numpy and torch.tensor
-        states = torch.tensor(np.asarray([state for state in states]), dtype=torch.float32).squeeze(-1)
-        actions = torch.tensor(np.asarray([action for action in actions]), dtype=torch.float32).unsqueeze(-1)  # Assuming actions are continuous
+        prev_states = torch.tensor(np.asarray([prev_state for prev_state in prev_states]), dtype=torch.float32).squeeze(-1)
+        actions = torch.tensor(np.asarray([action for action in actions]), dtype=torch.int).unsqueeze(-1)  # Assuming actions are continuous
         rewards = torch.tensor(np.asarray([reward for reward in rewards]), dtype=torch.float32).unsqueeze(-1)
-        next_states = torch.tensor(np.asarray([next_state for next_state in next_states]), dtype=torch.float32).unsqueeze(-1)
-        dones = torch.tensor(np.asarray([done for done in dones]), dtype=torch.float32).unsqueeze(-1)
-
-
-        return states, actions, rewards, next_states, dones
+        next_states = torch.tensor(np.asarray([next_state for next_state in next_states]), dtype=torch.float32).squeeze(-1)
+        dones = torch.tensor(np.asarray([done for done in dones]), dtype=torch.int8).unsqueeze(-1)
+        return prev_states, actions, rewards, next_states, dones
     
 
 class EnvUtils:

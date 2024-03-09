@@ -8,6 +8,8 @@ class Network(nn.Module):
         self.out_channels = [32, 64, 64]
         self.kernel_sizes = [8, 4, 3]
         self.strides = [4, 2, 1]
+        self.batch_size = batch_size
+        
         #learn features from image with conv2d
         self.conv_stack = nn.Sequential(
             nn.Conv2d(4, 32, kernel_size=8, stride=4),
@@ -20,7 +22,7 @@ class Network(nn.Module):
         h_out, w_out = self._last_conv_out_size(frames[1], frames[2], num_convs=3)
         #take features and map them to outputs (actions)
         self.fc = nn.Sequential(
-            nn.Linear(h_out*w_out*batch_size*64, 512),
+            nn.Linear(h_out*w_out*64, 512),
             nn.ReLU(),
             nn.Linear(512, num_actions)
         )
@@ -38,9 +40,9 @@ class Network(nn.Module):
         return h_out_size, w_out_size
     
     def forward(self, imgs_tensor):
-        #print(imgs_tensor.shape)
         imgs_tensor = self.conv_stack(imgs_tensor)
-        imgs_tensor = imgs_tensor.view(1, -1)# Flatten to 1xm
+        imgs_tensor = imgs_tensor.view(self.batch_size, -1)
         imgs_tensor = self.fc(imgs_tensor)
+
         return imgs_tensor
 
