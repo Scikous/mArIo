@@ -2,18 +2,26 @@
 A neural network utilizing reinforcement learning (Deep Q Learning in this case) for playing Super Marios Bros. (NES)
 
 ## Table of Contents
-- [Prerequisites](#prerequisites)
+- [Dependencies](#dependencies)
+- [Features](#features)
 - [Usage](#usage)
 - [Credits](#credits)
 
-# Prerequisites
-## Dependencies
+# Dependencies
 > :warning: Gym versions later than 0.23.1 are incompatible with gym-super-mario_bros 7.4.0
 ```
 pip install -r requirements.txt
 ```
+
+# Features
+```
+- Mathematically correct implementation of Deep Q Learning
+- Custom Convolutional Neural Network (CNN)
+- Easy training and testing
+```
+
 # Usage
-Simply run the env.py or env_eval.py (assuming you already have a trained model) 
+Simply run the env.py for training a model or env_eval.py for evaluating (testing) a model
 
 # Credits
 Some logic and code used from the following:
