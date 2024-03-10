@@ -45,7 +45,7 @@ for episode in range(EPISODES):  # 5000 steps max, you can change this to any nu
         mArIo.update_target_network()
         episodes_avg_reward = np.sum(episodes_rewards)/len(episodes_rewards)
         mArIo.save_model_checkpoint(episodes_avg_reward)
-        episodes_rewards = np.empty([])
+        episodes_rewards = np.empty([0])
         print(f"Average Episode Reward: {episodes_avg_reward}")
 
 env.close()
