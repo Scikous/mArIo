@@ -37,8 +37,8 @@ for episode in range(EPISODES):  # 5000 steps max, you can change this to any nu
             prev_states, actions, rewards, next_states, dones = replay_memory.random_sample(batch_size=batch_size) 
             mArIo.deep_q_trainer(prev_states, next_states, actions, rewards, dones)
         episode_reward += reward
-        #env.render()  # display the environment state
-    print(f"Episode: {episode}")
+        env.render()  # display the environment state
+    print(f"Episode: {episode}, Episode Reward: {episode_reward}")
     mArIo.epsilon_decay()
     episodes_rewards = np.append(episodes_rewards, episode_reward)
     if episode % 10 == 0:#update/sync target network with online every 10 episodes

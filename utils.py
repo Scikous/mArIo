@@ -65,5 +65,5 @@ class EnvUtils:
             plt.xlabel("Episode")
             plt.ylabel("Episode Reward")
             plt.show()
-        except ValueError:
+        except Exception:
             print("Could not load episodes rewards or make a plot")

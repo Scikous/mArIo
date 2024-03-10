@@ -29,7 +29,6 @@ class Agent:
         self.optimizer = optim.Adam(self.online_network.parameters(), lr=self.learning_rate)
         #parameters for saving model
         self.load_model(eval)
-        self.save_params = {"model_state":self.online_network.state_dict(), "optimizer_state":self.optimizer.state_dict()}
 
     #train network using Deep-Q-Learning    
     def deep_q_trainer(self, prev_states, next_states, actions, rewards, dones):
@@ -62,18 +61,22 @@ class Agent:
         
     #save the learning progress
     def save_model_checkpoint(self, episodes_reward=None):
+        save_params = {"model_state":self.online_network.state_dict(), "optimizer_state": self.optimizer.state_dict()}
+        total_average_reward = 0.0
         if episodes_reward:
             try:
                 eps_rewards = np.load("episodes_rewards.npy")
                 eps_rewards = np.append(eps_rewards, episodes_reward)
                 total_average_reward = np.sum(eps_rewards)
-                if eps_rewards[-1] > total_average_reward:
-                    torch.save(self.save_params, f"mArIo_best.pt")
             except Exception as e:
                 print(e)
-                eps_rewards = np.array(episodes_reward)
-            np.save("episodes_rewards", eps_rewards)
-        torch.save(self.save_params, f"mArIo_training.pt")
+                eps_rewards = np.array([episodes_reward])
+            finally:#check if model is saveable
+                if eps_rewards[-1] > total_average_reward:
+                    torch.save(save_params, f"mArIo_best.pt")
+                    print("New Best Model Saved")
+                np.save("episodes_rewards", eps_rewards)
+        torch.save(save_params, f"mArIo_training.pt")
         print("Successfully saved model")
 
     def load_episodes_rewards(self):
