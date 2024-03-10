@@ -18,7 +18,8 @@ replay_memory = utils.ReplayMem(max_size=50000)
 mArIo = Agent(env.observation_space.shape, len(SIMPLE_MOVEMENT), batch_size)
 episodes_rewards = np.empty([0])
 
-utils.EnvUtils.episodes_rewards_plotter(mArIo.load_episodes_rewards())
+#plot accumalted rewards
+#utils.EnvUtils.episodes_rewards_plotter(mArIo.load_episodes_rewards())
 
 for episode in range(EPISODES):  # 5000 steps max, you can change this to any number you want
     done = False
