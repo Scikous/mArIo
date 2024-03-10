@@ -67,7 +67,7 @@ class Agent:
             try:
                 eps_rewards = np.load("episodes_rewards.npy")
                 eps_rewards = np.append(eps_rewards, episodes_reward)
-                total_average_reward = np.sum(eps_rewards)
+                total_average_reward = np.sum(eps_rewards)/len(eps_rewards)
             except Exception as e:
                 print(e)
                 eps_rewards = np.array([episodes_reward])
