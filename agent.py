@@ -15,7 +15,7 @@ class Agent:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
         self.gamma = 0.87
-        self.epsilon = 0.8
+        self.epsilon = 0.97
         self.eps_decay = 0.995
         self.eps_min = 0.02
         self.learning_rate = 5e-4
@@ -24,11 +24,11 @@ class Agent:
         #initialize networks
         self.online_network = Network(frames, num_actions, batch_size)
         self.target_network = Network(frames, num_actions, batch_size)
-        self.load_model()
         #backprop initialization
         self.loss = nn.MSELoss()
         self.optimizer = optim.Adam(self.online_network.parameters(), lr=self.learning_rate)
         #parameters for saving model
+        self.load_model(eval)
         self.save_params = {"model_state":self.online_network.state_dict(), "optimizer_state":self.optimizer.state_dict()}
 
     #train network using Deep-Q-Learning    
@@ -52,8 +52,8 @@ class Agent:
         self.epsilon = max(self.epsilon*self.eps_decay, self.eps_min)
     
     #choose either a random action or a specific one based on learned knowledge
-    def choose_action(self, state):
-        if np.random.rand() < self.epsilon:
+    def choose_action(self, state, eval=False):
+        if np.random.rand() < self.epsilon and not eval:
             return np.random.randint(self.num_actions)
         else:
             pred_q_vals = self.online_network(state, 1)
@@ -61,18 +61,18 @@ class Agent:
             return action
         
     #save the learning progress
-    def save_model_checkpoint(self, episodes_rewards=None):
-        if any(episodes_rewards):
+    def save_model_checkpoint(self, episodes_reward=None):
+        if episodes_reward:
             try:
-                episodes_rewards = np.load("episodes_rewards.npy")
-                episodes_rewards = np.append(episodes_rewards, episodes_rewards)
-                total_average_reward = np.sum(episodes_rewards)
-                if episodes_rewards[-1] > total_average_reward:
+                eps_rewards = np.load("episodes_rewards.npy")
+                eps_rewards = np.append(eps_rewards, episodes_reward)
+                total_average_reward = np.sum(eps_rewards)
+                if eps_rewards[-1] > total_average_reward:
                     torch.save(self.save_params, f"mArIo_best.pt")
             except Exception as e:
                 print(e)
-                episodes_rewards = episodes_rewards
-            np.save("episodes_rewards", episodes_rewards)
+                eps_rewards = np.array(episodes_reward)
+            np.save("episodes_rewards", eps_rewards)
         torch.save(self.save_params, f"mArIo_training.pt")
         print("Successfully saved model")
 
@@ -92,9 +92,7 @@ class Agent:
             print("Successfully Loaded Model Checkpoint")
         except Exception as e:
             print(e)
-
-
-
+    
 
 
     
