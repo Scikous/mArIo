@@ -12,7 +12,7 @@ start_state = utils.EnvUtils.lazyframe_to_tensor(env.reset())
 prev_state = start_state
 EPISODES = 50000
 mArIo = Agent(env.observation_space.shape, len(SIMPLE_MOVEMENT), eval=True)
-episodes_rewards = np.empty([])
+episodes_rewards = np.empty([0])
 
 for episode in range(EPISODES):  # 5000 steps max, you can change this to any number you want
     done = False
@@ -28,7 +28,7 @@ for episode in range(EPISODES):  # 5000 steps max, you can change this to any nu
     episodes_rewards = np.append(episodes_rewards, episode_reward)
     if episode % 10 == 0:#update/sync target network with online every 10 episodes
         episodes_avg_reward = np.sum(episodes_rewards)/len(episodes_rewards)
-        episodes_rewards = np.empty([])
+        episodes_rewards = np.empty([0])
         print(f"Average Episode Reward: {episodes_avg_reward}")
 
 env.close()
