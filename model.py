@@ -1,6 +1,5 @@
 import torch.nn as nn
 import torch
-import numpy as np
 #learns features from image and gives potential action outputs
 class Network(nn.Module):
     def __init__(self, frames, num_actions, batch_size):
