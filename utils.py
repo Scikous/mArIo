@@ -58,9 +58,12 @@ class EnvUtils:
         return state
     @staticmethod
     def episodes_rewards_plotter(episodes_rewards):
-        episodes = np.arange(0, len(episodes_rewards))
-        plt.plot(episodes,episodes_rewards)
-        plt.title("Reward over episodes")
-        plt.xlabel("Episode")
-        plt.ylabel("Episode Reward")
-        plt.show()
+        try:
+            episodes = np.arange(0, len(episodes_rewards))
+            plt.plot(episodes,episodes_rewards)
+            plt.title("Reward over episodes")
+            plt.xlabel("Episode")
+            plt.ylabel("Episode Reward")
+            plt.show()
+        except ValueError:
+            print("Could not load episodes rewards or make a plot")
