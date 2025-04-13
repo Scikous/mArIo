@@ -15,7 +15,7 @@ class Agent:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
         self.gamma = 0.87
-        self.epsilon = 0.97
+        self.epsilon = 0.02#0.97
         self.eps_decay = 0.995
         self.eps_min = 0.02
         self.learning_rate = 5e-4
@@ -49,6 +49,7 @@ class Agent:
 
     def epsilon_decay(self):
         self.epsilon = max(self.epsilon*self.eps_decay, self.eps_min)
+        print("Epsilon:",self.epsilon)
     
     #choose either a random action or a specific one based on learned knowledge
     def choose_action(self, state, eval=False):
@@ -60,7 +61,7 @@ class Agent:
             return action
         
     #save the learning progress
-    def save_model_checkpoint(self, episodes_reward=None):
+    def save_model_checkpoint(self, episodes_reward=None, milestone=False):
         save_params = {"model_state":self.online_network.state_dict(), "optimizer_state": self.optimizer.state_dict()}
         total_average_reward = 0.0
         if episodes_reward:
@@ -72,7 +73,7 @@ class Agent:
                 print(e)
                 eps_rewards = np.array([episodes_reward])
             finally:#check if model is saveable
-                if eps_rewards[-1] > total_average_reward:
+                if eps_rewards[-1] > total_average_reward or milestone:
                     torch.save(save_params, f"mArIo_best.pt")
                     print("New Best Model Saved")
                 np.save("episodes_rewards", eps_rewards)
